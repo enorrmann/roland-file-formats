@@ -6,21 +6,21 @@ crc 32 bits
 
 nombre de kit 16 bytes
 49 4E 49 54 49 41 4C 20 4B 49 54 20 20 20 20 20 				INITIAL KIT     
-00 00 00 00 7e 00 00 64 00 00 00 00 00 01 7f 7f					7e es el volumen del kit, los demas no se aun
+00 00 00 00 7e 00 00 64 00 00 00 00 00 01 7f 7f					7e kit volume, rest is unknown yet
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00					aca empiezan un monton de ceros, lo unico notable es que se repite el  01 7f 7f
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 01 7f 7f 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
-01 64 62 d8 07 1b 30 00 00 00 00 00 00 00 00 01 				aca empiezan los 6 compresores, 8 bytes para cada compresor total 48 bytes
+01 64 62 d8 07 1b 30 00 00 00 00 00 00 00 00 01 				compressor info, 8 bytes for each total 48 bytes
 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 01
-00 00 00 00 00 00 00 01 01 64 63 c8 07 1e 30 00					ultimos 2 compresores
+00 00 00 00 00 00 00 01 01 64 63 c8 07 1e 30 00					last 2 compressors
 
-01 00 00 00 00 00 7f 00  00 00 00 00 01 00 00 00  00 00 00 00 	esto se repite varias veces (88 grupos de 20 bytes) drum_kit_svz_group_1.txt
-00 00 00 00 00 00 C8 00 E8 03 D0 07 0A 00 00 00					luego repite 88 grupos de 16 bytes drum_kit_svz_group_2.txt
+01 00 00 00 00 00 7f 00  00 00 00 00 01 00 00 00  00 00 00 00 	(88 groups  20 bytes each) drum_kit_svz_group_1.txt
+00 00 00 00 00 00 C8 00 E8 03 D0 07 0A 00 00 00					(88 groups  16 bytes each) drum_kit_svz_group_2.txt
 
 01 00 00 00 40 4A 00 00 14 00 00 00 00 00 00 00 21 90 F8 6F		despues viene esto, de los cuales los ultimos 4 bytes son el crc 32
 
-																y por ultimo 88 veces grupos de 216 bytes drum_kit_svz_group_3.txt
+																(88 groups  216 bytes each) drum_kit_svz_group_3.txt
 4A 61 7A 7A 20 4B 69 63 6B 20 31 20 20 20 20 20 01 7F 3C 00 00 00 00 00 00 00 01 00 01 00 08 00 15 02 00 00 03 00 01 00 FF 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 01 00 08 00 17 02 00 00 03 00 01 00 FE 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 00 00 08 00 00 00 00 00 01 00 01 00 00 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 00 00 08 00 00 00 00 00 01 00 01 00 00 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 01 00 06 03 00 00 00 00 00 01 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 03 FF 03 FF 03 00 00 00 00 00 00 49 00 90 01 00 00 FF 03 FF 03 00 00
