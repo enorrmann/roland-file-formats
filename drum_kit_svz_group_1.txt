@@ -1,0 +1,21 @@
+00	EQ LOW gain / f0 si el signo es -, se calcula 256 - este valor, y el resultado es /10 negativo
+00	EQ LOW signo 00 + ff -
+00	EQ MID
+00	EQ MID sign
+00	EQ HI
+00	EQ HI sign
+C8
+00
+E8
+03
+D0
+07
+0A
+00	instrument eq on off 00 / 01
+00
+00
+
+ 2 es 14 00
+ 1 es 0a 00
+-1 es f6 ff
+-2 es ec ff
