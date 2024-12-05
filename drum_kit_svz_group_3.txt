@@ -36,14 +36,14 @@
 36	wave 1 R LSB
 37	wave 1 GAIN
 38	wave 1 FXM switch
-39	
-40	
-41	
-42	
-43	
-44	
-45	
-46	
+39	wave 1 FXM color
+40	wave 1 FXM depth
+41	wave 1 coarse tune
+42	wave 1 fine tune
+43	wave 1 pan
+44	wave 1 random pan sw
+45	wave 1 alternate pan sw
+46	wave 1 level
 47	
 48	
 49	
@@ -82,7 +82,7 @@
 82	
 83	
 84	
-85	
+85	wave 3 on / off
 86	
 87	
 88	
@@ -110,7 +110,7 @@
 110	
 111	
 112	
-113	
+113	wave 4 on / off
 114	
 115	
 116	
