@@ -138,41 +138,41 @@
 138	wave 4 vel range upper
 139	wave 4 vel fade lower
 140	wave 4 vel fade upper
-141	
+141	inst filter type
 142	
-143	
-144	
-145	
-146	
-147	
-148	
-149	
+143	inst filter cutoff MSB
+144	inst filter cutoff LSB
+145	inst filter cutoff vel curve
+146	inst filter cutoff vel sens
+147	inst filter res MSB
+148	inst filter res LSB
+149	inst filter res vel sens
 150	
 151	
 152	inst tempo sync
-153	
-154	
-155	
-156	
-157	
-158	
-159	
-160	
-161	
-162	
-163	
-164	
-165	
-166	
-167	
-168	
-169	
-170	
-171	
-172	
-173	
-174	
-175	
+153	pitch env depth
+154	pitch env velocity sens
+155	pitch env t1 velocity sens
+156	pitch env t4 velocity sens
+157	pitch env t1 MSB
+158	pitch env t1 LSB
+159	pitch env t2 MSB
+160	pitch env t2 LSB
+161	pitch env t3 MSB
+162	pitch env t3 LSB
+163	pitch env t4 MSB
+164	pitch env t4 LSB
+165	pitch env l0 MSB
+166	pitch env l0 LSB
+167	pitch env l1 MSB
+168	pitch env l1 LSB
+169	pitch env l2 MSB
+170	pitch env l2 LSB
+171	pitch env l3 MSB
+172	pitch env l3 LSB
+173	pitch env l4 MSB
+174	pitch env l4 LSB
+175	velocity curve
 176	
 177	
 178	
