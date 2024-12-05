@@ -45,99 +45,99 @@
 45	wave 1 alternate pan sw
 46	wave 1 level
 47	
-48	
-49	
-50	
-51	
-52	
-53	
-54	
-55	
-56	
+48	wave 1 delay mode
+49	wave 1 delay time sync
+50	wave 1 delay time note
+51	wave 1 delay time MSB
+52	wave 1 delay time LSB
+53	wave 1 vel range lower
+54	wave 1 vel range upper
+55	wave 1 vel fade lower
+56	wave 1 vel fade upper
 57	wave 2 on / off
 58	
-59	
+59	wave 2 BANK
 60	
-61	
-62	
-63	
-64	
-65	
-66	
-67	
-68	
-69	
-70	
-71	
-72	
-73	
-74	
+61	wave 2 L MSB
+62	wave 2 L LSB
+63	wave 2 R MSB
+64	wave 2 R LSB
+65	wave 2 GAIN
+66	wave 2 FXM switch
+67	wave 2 FXM color
+68	wave 2 FXM depth
+69	wave 2 coarse tune
+70	wave 2 fine tune
+71	wave 2 pan
+72	wave 2 random pan sw
+73	wave 2 alternate pan sw
+74	wave 2 level
 75	
-76	
-77	
-78	
-79	
-80	
-81	
-82	
-83	
-84	
+76	wave 2 delay mode
+77	wave 2 delay time sync
+78	wave 2 delay time note
+79	wave 2 delay time MSB
+80	wave 2 delay time LSB
+81	wave 2 vel range lower
+82	wave 2 vel range upper
+83	wave 2 vel fade lower
+84	wave 2 vel fade upper
 85	wave 3 on / off
 86	
-87	
+87	wave 3 BANK
 88	
-89	
-90	
-91	
-92	
-93	
-94	
-95	
-96	
-97	
-98	
-99	
-100	
-101	
-102	
+89	wave 3 L MSB
+90	wave 3 L LSB
+91	wave 3 R MSB
+92	wave 3 R LSB
+93	wave 3 GAIN
+94	wave 3 FXM switch
+95	wave 3 FXM color
+96	wave 3 FXM depth
+97	wave 3 coarse tune
+98	wave 3 fine tune
+99	wave 3 pan
+100	wave 3 random pan sw
+101	wave 3 alternate pan sw
+102	wave 3 level
 103	
-104	
-105	
-106	
-107	
-108	
-109	
-110	
-111	
-112	
+104	wave 3 delay mode
+105	wave 3 delay time sync
+106	wave 3 delay time note
+107	wave 3 delay time MSB
+108	wave 3 delay time LSB
+109	wave 3 vel range lower
+110	wave 3 vel range upper
+111	wave 3 vel fade lower
+112	wave 3 vel fade upper
 113	wave 4 on / off
 114	
-115	
+115	wave 4 BANK
 116	
-117	
-118	
-119	
-120	
-121	
-122	
-123	
-124	
-125	
-126	
-127	
-128	
-129	
-130	
+117	wave 4 L MSB
+118	wave 4 L LSB
+119	wave 4 R MSB
+120	wave 4 R LSB
+121	wave 4 GAIN
+122	wave 4 FXM switch
+123	wave 4 FXM color
+124	wave 4 FXM depth
+125	wave 4 coarse tune
+126	wave 4 fine tune
+127	wave 4 pan
+128	wave 4 random pan sw
+129	wave 4 alternate pan sw
+130	wave 4 level
 131	
-132	
-133	
-134	
-135	
-136	
-137	
-138	
-139	
-140	
+132	wave 4 delay mode
+133	wave 4 delay time sync
+134	wave 4 delay time note
+135	wave 4 delay time MSB
+136	wave 4 delay time LSB
+137	wave 4 vel range lower
+138	wave 4 vel range upper
+139	wave 4 vel fade lower
+140	wave 4 vel fade upper
 141	
 142	
 143	
