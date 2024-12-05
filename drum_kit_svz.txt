@@ -1,11 +1,20 @@
 svz format for drum kit
 
 COMMON, ARRIBA DE TODO
-header siempre igual
-crc 32 bits
 
-nombre de kit 16 bytes
-49 4E 49 54 49 41 4C 20 4B 49 54 20 20 20 20 20 				INITIAL KIT     
+header always the same (136 bytes)     offset 0
+53 56 5A 61 03 03 52 43 30 30 31 01 00 00 00 00 
+44 49 46 61 5A 43 4F 52 40 00 00 00 34 00 00 00 
+52 48 59 61 5A 43 4F 52 74 00 00 00 14 0D 00 00 
+49 4E 53 61 5A 43 4F 52 88 0D 00 00 54 4A 00 00 
+01 00 00 00 20 00 00 00 14 00 00 00 00 00 00 00
+2F 86 EF 96 01 00 C3 81 D1 1B C1 13 B0 00 C0 00 
+C0 00 C0 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 01 00 00 00 00 0D 00 00 14 00 00 00 
+00 00 00 00 35 B4 A9 9C											last 4 bytes are crc32,can be ignored
+
+common block (112 bytes)             offset 136
+49 4E 49 54 49 41 4C 20 4B 49 54 20 20 20 20 20 				INITIAL KIT     (kit name 32 bytes)
 00 00 00 00 7e 00 00 64 00 00 00 00 00 01 7f 7f					7e kit volume, rest is unknown yet
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00					aca empiezan un monton de ceros, lo unico notable es que se repite el  01 7f 7f
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -13,14 +22,20 @@ nombre de kit 16 bytes
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
-01 64 62 d8 07 1b 30 00 00 00 00 00 00 00 00 01 				compressor info, 8 bytes for each total 48 bytes
+compressor info (48 bytes)           offset 248
+01 64 62 d8 07 1b 30 00 00 00 00 00 00 00 00 01 				6 compressors info, 8 bytes for each total 48 bytes
 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 01
-00 00 00 00 00 00 00 01 01 64 63 c8 07 1e 30 00					last 2 compressors
+00 00 00 00 00 00 00 01 01 64 63 c8 07 1e 30 00					
 
-01 00 00 00 00 00 7f 00  00 00 00 00 01 00 00 00  00 00 00 00 	(88 groups  20 bytes each) drum_kit_svz_group_1.txt
+repeating group 1 (1760 bytes)       offset 296
+01 00 00 00 00 00 7f 00 00 00 00 00 01 00 00 00 00 00 00 00 	(88 groups  20 bytes each) drum_kit_svz_group_1.txt
+
+repeating group 2 (1408 bytes)      offset 2056 
 00 00 00 00 00 00 C8 00 E8 03 D0 07 0A 00 00 00					(88 groups  16 bytes each) drum_kit_svz_group_2.txt
 
+footer (20 bytes)
 01 00 00 00 40 4A 00 00 14 00 00 00 00 00 00 00 21 90 F8 6F		despues viene esto, de los cuales los ultimos 4 bytes son el crc 32
 
+repeating group 3 (19008 bytes)
 																(88 groups  216 bytes each) drum_kit_svz_group_3.txt
 4A 61 7A 7A 20 4B 69 63 6B 20 31 20 20 20 20 20 01 7F 3C 00 00 00 00 00 00 00 01 00 01 00 08 00 15 02 00 00 03 00 01 00 FF 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 01 00 08 00 17 02 00 00 03 00 01 00 FE 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 00 00 08 00 00 00 00 00 01 00 01 00 00 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 00 00 08 00 00 00 00 00 01 00 01 00 00 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 01 00 06 03 00 00 00 00 00 01 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 03 FF 03 FF 03 00 00 00 00 00 00 49 00 90 01 00 00 FF 03 FF 03 00 00
