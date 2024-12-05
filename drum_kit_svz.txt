@@ -33,9 +33,9 @@ repeating group 1 (1760 bytes)       offset 296
 repeating group 2 (1408 bytes)      offset 2056 
 00 00 00 00 00 00 C8 00 E8 03 D0 07 0A 00 00 00					(88 groups  16 bytes each) drum_kit_svz_group_2.txt
 
-footer (20 bytes)
+footer (20 bytes)                   offset 3464
 01 00 00 00 40 4A 00 00 14 00 00 00 00 00 00 00 21 90 F8 6F		despues viene esto, de los cuales los ultimos 4 bytes son el crc 32
 
-repeating group 3 (19008 bytes)
+repeating group 3 (19008 bytes) offset     3484
 																(88 groups  216 bytes each) drum_kit_svz_group_3.txt
 4A 61 7A 7A 20 4B 69 63 6B 20 31 20 20 20 20 20 01 7F 3C 00 00 00 00 00 00 00 01 00 01 00 08 00 15 02 00 00 03 00 01 00 FF 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 01 00 08 00 17 02 00 00 03 00 01 00 FE 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 00 00 08 00 00 00 00 00 01 00 01 00 00 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 00 00 08 00 00 00 00 00 01 00 01 00 00 00 00 01 01 7F 00 00 00 0C 00 00 01 7F 00 00 01 00 06 03 00 00 00 00 00 01 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 03 FF 03 FF 03 00 00 00 00 00 00 49 00 90 01 00 00 FF 03 FF 03 00 00
