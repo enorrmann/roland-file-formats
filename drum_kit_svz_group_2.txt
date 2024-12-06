@@ -1,0 +1,16 @@
+1 EQ low gain
+2 EQ low gain sign
+3 EQ mid gain
+4 EQ mid gain sign
+5 EQ hi gain
+6 EQ hi gain sign
+7 LOW freq MSB
+8 LOW freq LSB
+9 MID freq MSB
+10 MID freq LSB
+11 HI freq MSB
+12 HI freq LSB
+13 mid Q
+14 eq on / off 0 1
+15
+16

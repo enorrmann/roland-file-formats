@@ -1,20 +1,20 @@
-00 EQ low gain
-00 EQ low gain sign
-00 EQ mid gain
-00 EQ mid gain sign
-00 EQ hi gain
-00 EQ hi gain sign
-c8 LOW freq MSB
-00 LOW freq LSB
-e8 MID freq MSB
-03 MID freq LSB
-d0 HI freq MSB
-07 HI freq LSB
-0a mid Q
-00 eq on / off 0 1
-00
-00
-00
-00
-00
-00
+1
+2
+3
+4
+5
+6
+7
+8
+9 inst pan
+10
+11 rev send
+12 mute group
+13 out assign
+14 key offset
+15 fine tune
+16 cutoff
+17 resonance
+18 attack
+19 decay
+20 release
