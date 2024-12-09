@@ -11,11 +11,11 @@ Here is an example. I created a new project, change sound source for track 1 to 
 The following data request (RQ1=0x11) requests the DRUM KIT COMMON fragment for the DRUM KIT of the first clip of the first track, which uses the address 32 10 00 00.
 Code: Select all
 
-F0 41 10  00 00 00 5E  11  32 10 00 00  00 00 00 19  00 F7
+F0 41 10 00 00 00 5E 11 32 10 00 00 00 00 00 19 00 F7
 The MC-101 responds with a data set (DT1=0x12) response, with the address 06 44 00 00.
 Code: Select all
 
-F0 41 10  00 00 00 5E  12  06 44 00 00  54 52 2D 38 30 38 20 32 20 20 20 20 20 20 20 20 00 00 00 09 78 06 04 08 00  5E F7
+F0 41 10 00 00 00 5E 12 06 44 00 00 54 52 2D 38 30 38 20 32 20 20 20 20 20 20 20 20 00 00 00 09 78 06 04 08 00 5E F7
 The format of the response is documented in the Fantom-0 MIDI implementation (look for Drum Kit Common). You can see that it starts with a name, and if you decode the hex into ASCII, it is the name of the first drum kit (TR-808 2). The drum kit consists of multiple fragments. They are documented in the section [Drum Kit]. You only need to add the corresponding offsets to the address 32 10 00 00.
 
 If it would be implemented correctly, then the address in the response should match the address in the request. It looks like there is an implementation error, and the response address is incorrectly encoded (some error in the conversion between 7-bit and 8-bit). By looking at the bit representation, you can see that the addresses are similar, and just shifted by some positions.
@@ -27,3 +27,13 @@ Code: Select all
 
 test select drum on clip 1 
 F0 41 10 00 00 00 5E 12 32 10 00 00 54 52 2D 38 30 38 20 32 20 20 20 20 20 20 20 20 00 00 00 09 78 06 04 08 00 5E F7
+
+huge dump
+send_sysex "F0 41 10 00 00 00 5E 11 32 10 00 00 01 00 00 10 00 F7"
+
+
+from fantom docs
+The model ID of the exclusive messages used by this instrument is 00 00 00 5B
+
+
+send_sysex "F0 41 10 00 00 00 5E 11 32 10 00 00 00 00 00 19 00 F7"
