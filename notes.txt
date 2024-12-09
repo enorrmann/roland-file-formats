@@ -1,0 +1,29 @@
+alias send_sysex="amidi -p hw:3,0,0 -S"
+
+F0 41 17 76 FB F7 seq play
+
+from fantoms 0
+F0 7E 10 06 01 F7 sys info
+
+
+Here is an example. I created a new project, change sound source for track 1 to clip, and loaded the first drum kit into the first clip.
+
+The following data request (RQ1=0x11) requests the DRUM KIT COMMON fragment for the DRUM KIT of the first clip of the first track, which uses the address 32 10 00 00.
+Code: Select all
+
+F0 41 10  00 00 00 5E  11  32 10 00 00  00 00 00 19  00 F7
+The MC-101 responds with a data set (DT1=0x12) response, with the address 06 44 00 00.
+Code: Select all
+
+F0 41 10  00 00 00 5E  12  06 44 00 00  54 52 2D 38 30 38 20 32 20 20 20 20 20 20 20 20 00 00 00 09 78 06 04 08 00  5E F7
+The format of the response is documented in the Fantom-0 MIDI implementation (look for Drum Kit Common). You can see that it starts with a name, and if you decode the hex into ASCII, it is the name of the first drum kit (TR-808 2). The drum kit consists of multiple fragments. They are documented in the section [Drum Kit]. You only need to add the corresponding offsets to the address 32 10 00 00.
+
+If it would be implemented correctly, then the address in the response should match the address in the request. It looks like there is an implementation error, and the response address is incorrectly encoded (some error in the conversion between 7-bit and 8-bit). By looking at the bit representation, you can see that the addresses are similar, and just shifted by some positions.
+Code: Select all
+
+32 10 00 00 - 00110010 00010000 00000000 00000000
+06 44 00 00 - 00000110 01000100 00000000 00000000
+
+
+test select drum on clip 1 
+F0 41 10 00 00 00 5E 12 32 10 00 00 54 52 2D 38 30 38 20 32 20 20 20 20 20 20 20 20 00 00 00 09 78 06 04 08 00 5E F7
