@@ -1,4 +1,4 @@
 http://midi.teragonaudio.com/tutr/rolsysx.htm
 
-relates project
+related project
 https://github.com/DrKnackerator/RolandZenDecodeXML
