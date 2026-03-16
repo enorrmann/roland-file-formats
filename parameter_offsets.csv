@@ -1,0 +1,546 @@
+Level,00
+Coarse Tune,01
+Fine Tune,02
+0000 cccc,05
+Random Pitch Depth,06
+Pan,07
+Pan Keyfollow,08
+Random Pan Depth,0A
+Alternate Pan Depth,0B
+Envelope Mode,0C
+Delay Mode,0D
+DelayTime Sync,0E
+DelayTimenote),0F
+0000 cccc,12
+DelayTime,13
+Chorus Send Level,14
+Reverb Send Level,15
+Receive Bender,16
+Receive Expression,17
+Receive Hold-1,18
+Redamper Switch,19
+Output Assign,1A
+Wave Group Type,1B
+0000 cccc,1E
+Wave Group ID,1F
+0000 cccc,22
+Wave Number L,23
+0000 cccc,26
+Wave Number R,27
+Gain,28
+FXM Switch,29
+FXM Color,2A
+FXM Depth,2B
+0000 cccc,2E
+Pitch Keyfollow,2F
+Soft EQ Sens,30
+TVF Filter Type,31
+0000 cccc,34
+TVF Cutoff Frequency,35
+0000 cccc,38
+TVF Cutoff Keyfollow,39
+TVF Cutoff Velocity Curve,3A
+TVF Cutoff Velocity Sens,3C
+0000 cccc,3F
+TVF Resonance,40
+Bias Level,43
+Bias Position,45
+Bias Direction,46
+TVA Level Velocity Curve,47
+TVA Level Velocity Sens,49
+Pitch Env Time Keyfollow,4B
+TVF Env Time Keyfollow,4D
+TVA Env Time Keyfollow,4F
+Vibrato Pitch Sens,51
+Vibrato Cutoff Sens,53
+Vibrato Level Sens,55
+Source,56
+Destination 1,57
+Sens 1,58
+Destination 2,59
+Sens 2,5A
+Destination 3,5B
+Sens 3,5C
+Destination 4,5D
+Sens 4,5E
+Source,5F
+Destination 1,60
+Sens 1,61
+Destination 2,62
+Sens 2,63
+Destination 3,64
+Sens 3,65
+Destination 4,66
+Sens 4,67
+Source,68
+Destination 1,69
+Sens 1,6A
+Destination 2,6B
+Sens 2,6C
+Destination 3,6D
+Sens 3,6E
+Destination 4,6F
+Sens 4,70
+Source,71
+Destination 1,72
+Sens 1,73
+Destination 2,74
+Sens 2,75
+Destination 3,76
+Sens 3,77
+Destination 4,78
+Sens 4,79
+Damper Free Note,7A
+Stereo Width,7B
+Stereo Detune,7C
+Wave Tempo Sync,7F
+0000 cccc,02
+Inst Number,03
+Inst Bank,04
+0000 cccc,07
+Inst Group ID,08
+Level,09
+Pan,0A
+Chorus Send Level,0B
+Reverb Send Level,0C
+Mute Group,0D
+Output Assign,0E
+Key Offset,0F
+Fine Tune Offset,10
+TVA Attack Time Offset,16
+TVA Decay Time Offset,18
+TVA Release Time Offset,19
+Name,00
+Name,01
+Name,02
+Name,03
+Name,04
+Name,05
+Name,06
+Name,07
+Name,08
+Name,09
+Name,0A
+Name,0B
+Name,0C
+Name,0D
+Name,0E
+Name,0F
+Category,10
+Level,11
+Source Key,12
+Fine Tune,13
+0000 cccc,16
+Random Pitch Depth,17
+Random Pan Depth,18
+Alternate Pan Depth,19
+Assign Type,1A
+Envelope Mode,1B
+WMT Velocity Control,1C
+Wave Switch,1D
+Wave Group Type,1E
+0000 cccc,21
+Wave Group ID,22
+0000 cccc,25
+Wave Number L,26
+0000 cccc,29
+Wave Number R,2A
+Wave Gain,2B
+Wave FXM Switch,2C
+Wave FXM Color,2D
+Wave FXM Depth,2E
+Wave Fine Tune,30
+Wave Pan,31
+Wave Random Pan Sw,32
+Wave Alternate Pan Sw,33
+Wave Level,34
+Delay Mode,35
+DelayTime Sync,36
+DelayTimenote),37
+0000 cccc,3A
+DelayTime,3B
+VeloRange Lower,3C
+VeloRange Upper,3D
+VeloFade Lower,3E
+VeloFade Upper,3F
+Wave Switch,40
+Wave Group Type,41
+0000 cccc,44
+Wave Group ID,45
+0000 cccc,48
+Wave Number L,49
+0000 cccc,4C
+Wave Number R,4D
+Wave Gain,4E
+Wave FXM Switch,4F
+Wave FXM Color,50
+Wave FXM Depth,51
+Wave Coarse Tune,52
+Wave Fine Tune,53
+Wave Pan,54
+Wave Random Pan Sw,55
+Wave Alternate Pan Sw,56
+Wave Level,57
+Delay Mode,58
+DelayTime Sync,59
+DelayTimenote),5A
+0000 cccc,5D
+DelayTime,5E
+VeloRange Lower,5F
+VeloRange Upper,60
+VeloFade Lower,61
+VeloFade Upper,62
+Wave Group Type,64
+0000 cccc,67
+Wave Group ID,68
+0000 cccc,6B
+Wave Number L,6C
+0000 cccc,6F
+Wave Number R,70
+Wave Gain,71
+Wave FXM Switch,72
+Wave FXM Color,73
+Wave FXM Depth,74
+Wave Coarse Tune,75
+Wave Fine Tune,76
+Wave Pan,77
+Wave Random Pan Sw,78
+Wave Alternate Pan Sw,79
+Wave Level,7A
+Delay Mode,7B
+DelayTime Sync,7C
+DelayTimenote),7D
+0000 cccc,00
+DelayTime,01
+VeloRange Lower,02
+VeloRange Upper,03
+VeloFade Lower,04
+VeloFade Upper,05
+Wave Switch,06
+Wave Group Type,07
+0000 cccc,0A
+Wave Group ID,0B
+0000 cccc,0E
+Wave Number L,0F
+0000 cccc,12
+Wave Number R,13
+Wave Gain,14
+Wave FXM Switch,15
+Wave FXM Color,16
+Wave FXM Depth,17
+Wave Coarse Tune,18
+Wave Fine Tune,19
+Wave Pan,1A
+Wave Alternate Pan Sw,1C
+Wave Level,1D
+Delay Mode,1E
+DelayTime Sync,1F
+DelayTimenote),20
+0000 cccc,23
+DelayTime,24
+VeloRange Lower,25
+VeloRange Upper,26
+VeloFade Lower,27
+VeloFade Upper,28
+TVF Filter Type,29
+0000 cccc,2C
+TVF Cutoff Frequency,2D
+TVF Cutoff Velocity Curve,2E
+0000 cccc,33
+TVF Resonance,34
+TVF Resonance Velocity Sens,36
+TVA Level Velocity Curve,37
+TVA Level Velocity Sens,38
+Wave Tempo Sync,3A
+MFX Type,00
+MFX Switch,01
+MFX Chorus Send Level,02
+MFX Reverb Send Level,03
+MFX CtrlSrc 1,04
+MFX CtrlSens 1,05
+MFX CtrlSrc 2,06
+MFX CtrlSens 2,07
+MFX CtrlSrc 3,08
+MFX CtrlSens 3,09
+MFX CtrlSrc 4,0A
+MFX CtrlSens 4,0B
+MFX CtrlAsgn,0C
+0000 cccc,12
+MFX Parameter 1,13
+0000 cccc,16
+MFX Parameter 2,17
+0000 cccc,1A
+MFX Parameter 3,1B
+0000 cccc,1E
+MFX Parameter 4,1F
+0000 cccc,22
+MFX Parameter 5,23
+0000 cccc,26
+MFX Parameter 6,27
+0000 cccc,2A
+MFX Parameter 7,2B
+0000 cccc,2E
+MFX Parameter 8,2F
+0000 cccc,32
+MFX Parameter 9,33
+0000 cccc,36
+MFX Parameter 10,37
+0000 cccc,3A
+MFX Parameter 11,3B
+0000 cccc,3E
+MFX Parameter 12,3F
+0000 cccc,42
+MFX Parameter 13,43
+0000 cccc,46
+MFX Parameter 14,47
+0000 cccc,4A
+MFX Parameter 15,4B
+0000 cccc,4E
+MFX Parameter 16,4F
+MFX Parameter 17,53
+0000 cccc,56
+MFX Parameter 18,57
+0000 cccc,5A
+MFX Parameter 19,5B
+0000 cccc,5E
+MFX Parameter 20,5F
+0000 cccc,62
+MFX Parameter 21,63
+0000 cccc,66
+MFX Parameter 22,67
+0000 cccc,6A
+MFX Parameter 23,6B
+0000 cccc,6E
+MFX Parameter 24,6F
+0000 cccc,72
+MFX Parameter 25,73
+0000 cccc,76
+MFX Parameter 26,77
+0000 cccc,7A
+MFX Parameter 27,7B
+0000 cccc,7E
+MFX Parameter 28,7F
+0000 cccc,02
+MFX Parameter 29,03
+0000 cccc,06
+MFX Parameter 30,07
+0000 cccc,0A
+MFX Parameter 31,0B
+0000 cccc,0E
+MFX Parameter 32,0F
+Switch,00
+Reverb Type,01
+Reverb Level,02
+Reverb Parameter 1,06
+0000 cccc,09
+Reverb Parameter 2,0A
+0000 cccc,0D
+Reverb Parameter 3,0E
+0000 cccc,11
+Reverb Parameter 4,12
+0000 cccc,15
+Reverb Parameter 5,16
+0000 cccc,19
+Reverb Parameter 6,1A
+0000 cccc,1D
+Reverb Parameter 7,1E
+0000 cccc,21
+Reverb Parameter 8,22
+0000 cccc,25
+Reverb Parameter 9,26
+0000 cccc,29
+Reverb Parameter 10,2A
+0000 cccc,2D
+Reverb Parameter 11,2E
+0000 cccc,31
+Reverb Parameter 12,32
+0000 cccc,35
+Reverb Parameter 13,36
+0000 cccc,39
+Reverb Parameter 14,3A
+0000 cccc,3D
+Reverb Parameter 15,3E
+0000 cccc,41
+Reverb Parameter 16,42
+0000 cccc,45
+Reverb Parameter 17,46
+0000 cccc,49
+Reverb Parameter 18,4A
+0000 cccc,4D
+Reverb Parameter 19,4E
+0000 cccc,50
+Reverb Parameter 20,52
+Switch,00
+Chorus Type,01
+0000 cccc,06
+Chorus Parameter 1,07
+0000 cccc,0A
+Chorus Parameter 2,0B
+0000 cccc,0E
+Chorus Parameter 3,0F
+0000 cccc,12
+Chorus Parameter 4,13
+0000 cccc,16
+Chorus Parameter 5,17
+0000 cccc,1A
+Chorus Parameter 6,1B
+0000 cccc,1E
+Chorus Parameter 7,1F
+0000 cccc,22
+Chorus Parameter 8,23
+0000 cccc,26
+Chorus Parameter 9,27
+0000 cccc,2A
+Chorus Parameter 10,2B
+0000 cccc,2E
+Chorus Parameter 11,2F
+0000 cccc,32
+Chorus Parameter 12,33
+0000 cccc,36
+Chorus Parameter 13,37
+0000 cccc,3A
+Chorus Parameter 14,3B
+0000 cccc,3E
+Chorus Parameter 15,3F
+0000 cccc,42
+Chorus Parameter 16,43
+0000 cccc,46
+Chorus Parameter 17,47
+0000 cccc,4A
+Chorus Parameter 18,4B
+0000 cccc,4E
+Chorus Parameter 19,4F
+0000 cccc,52
+Chorus Parameter 20,53
+Overdrive Type,00
+Dry Mix Level,02
+0000 cccc,05
+Overdrive parameter 1,06
+0000 cccc,09
+Overdrive parameter 2,0A
+0000 cccc,0D
+Overdrive parameter 3,0E
+0000 cccc,11
+Overdrive parameter 4,12
+0000 cccc,15
+Overdrive parameter 5,16
+0000 cccc,19
+Overdrive parameter 6,1A
+0000 cccc,1D
+Overdrive parameter 7,1E
+0000 cccc,21
+Overdrive parameter 8,22
+0000 cccc,25
+Overdrive parameter 9,26
+0000 cccc,29
+Overdrive parameter 10,2A
+0000 cccc,2D
+Overdrive parameter 11,2E
+0000 cccc,30
+Overdrive parameter 12,32
+0000 cccc,35
+Overdrive parameter 13,36
+0000 cccc,39
+Overdrive parameter 14,3A
+0000 cccc,3D
+Overdrive parameter 15,3E
+0000 cccc,41
+Overdrive parameter 16,42
+0000 cccc,45
+Overdrive parameter 17,46
+0000 cccc,49
+Overdrive parameter 18,4A
+0000 cccc,4D
+Overdrive parameter 19,4E
+0000 cccc,51
+Overdrive parameter 20,52
+0000 cccc,55
+Overdrive parameter 21,56
+0000 cccc,59
+Overdrive parameter 22,5A
+0000 cccc,5D
+Overdrive parameter 23,5E
+0000 cccc,61
+Overdrive parameter 24,62
+0000 cccc,65
+Overdrive parameter 25,66
+0000 cccc,69
+Overdrive parameter 26,6A
+0000 cccc,6D
+Overdrive parameter 27,6E
+0000 cccc,71
+Overdrive parameter 28,72
+0000 cccc,75
+Overdrive parameter 29,76
+0000 cccc,79
+Overdrive parameter 30,7A
+0000 cccc,7D
+Overdrive parameter 31,7E
+0000 cccc,01
+Overdrive parameter 32,02
+Rotary Type,00
+Rotary Switch,01
+0000 cccc,04
+Rotary parameter 1,05
+0000 cccc,08
+Rotary parameter 2,09
+0000 cccc,0C
+Rotary parameter 3,0D
+0000 cccc,10
+Rotary parameter 4,11
+0000 cccc,14
+Rotary parameter 5,15
+0000 cccc,18
+Rotary parameter 6,19
+0000 cccc,1C
+Rotary parameter 7,1D
+0000 cccc,20
+Rotary parameter 8,21
+0000 cccc,24
+Rotary parameter 9,25
+0000 cccc,28
+Rotary parameter 10,29
+0000 cccc,2C
+Rotary parameter 11,2D
+0000 cccc,30
+Rotary parameter 12,31
+0000 cccc,34
+Rotary parameter 13,35
+0000 cccc,38
+Rotary parameter 14,39
+0000 cccc,3B
+Rotary parameter 15,3D
+0000 cccc,40
+Rotary parameter 16,41
+0000 cccc,44
+Rotary parameter 17,45
+0000 cccc,48
+Rotary parameter 18,49
+0000 cccc,4C
+Rotary parameter 19,4D
+0000 cccc,50
+Rotary parameter 20,51
+0000 cccc,54
+Rotary parameter 21,55
+0000 cccc,58
+Rotary parameter 22,59
+0000 cccc,5C
+Rotary parameter 23,5D
+0000 cccc,60
+Rotary parameter 24,61
+0000 cccc,64
+Rotary parameter 25,65
+0000 cccc,68
+Rotary parameter 26,69
+0000 cccc,6C
+Rotary parameter 27,6D
+0000 cccc,70
+Rotary parameter 28,71
+0000 cccc,74
+Rotary parameter 29,75
+0000 cccc,78
+Rotary parameter 30,79
+0000 cccc,7C
+Rotary parameter 31,7D
+0000 cccc,00
+Rotary parameter 32,01
