@@ -1,0 +1,3 @@
+el objetivo del proyecto es adivinar los sysex recibidos y enviados por un roland mc-101 conectado por usb
+las herramientas disponibles son    
+send_sysex amidi -p hw:3,0,0 -S mensaje sysex en hex

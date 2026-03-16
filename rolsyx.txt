@@ -1,0 +1,375 @@
+Roland System Exclusive Implementation
+Introduction
+About the time that Roland released the S-10 sampler (mid 1980's as I recall), the company had devised a method of transfering any and all parameters (ie, settings) of a MIDI device by using System Exclusive messages over MIDI. So, any setting that you could adjust from the front panel of the device, you could also adjust over MIDI with a System Exclusive message.
+
+Note: From here on, I will refer to a System Exclusive message as "SysEx".
+
+It's true that many other manufacturers also allowed you to "dump" settings over MIDI. But the real difference was how Roland implemented this feature. What Roland did was devise a way that you could adjust one, and only one, specific setting (without affecting any other settings) using a single, small SysEx message. Other manufacturers typically did not do this. They required you to change many settings simultaneously using one, relatively large SysEx message. You couldn't easily adjust a single parameter without affecting the others, and certainly not using a small SysEx message.
+
+What were the ramifications of this?
+
+Well, let's say that you have a patch editor program on your computer, and it has graphical buttons, sliders, etc, that you manipulate with the mouse in order to change settings over MIDI. Let's say that you click on a button to change one particular setting. With Roland's method, the patch software can now send a very small, SysEx message to the module to change only that one setting. This takes merely a fraction of a second (because it's a very small SysEx message), so when you click the button, it seems as if the change is made instantaneously on the module. You can immediately play the module and hear how the new setting sounds.
+
+Now let's contrast that to the scheme typically used by other manufacturers. First of all, in order to change that one setting over MIDI, the patch software has to gather up all of the other settings that need to be changed simultaneously, and create one big SysEx message. Such a message could be several thousand bytes long (compared to less than a dozen bytes for the above Roland SysEx message). This takes a relatively long time to send over MIDI. You could be waiting from 15 seconds to several minutes before you're finally able to hear how the new setting sounds on the module. As you can see, this was not conducive to remotely editing those settings in realtime -- not like with a Roland module, which seems to interact almost instantaneously with the software.
+
+There is another ramification. Because a Roland SysEx message to change one setting is so small, you could even embed that SysEx in a MIDI file. For example, let's say that you want that setting changed in the middle of a song. You can play that MIDI file without hearing any glitch as a result of sending that small SysEx message in the middle of the song.
+
+But with the other manufacturer, if you tried to put such a large SysEx message in the middle of a song, the note data would be delayed for several seconds while the SysEx was sent, and typically you'd hear a noticeable "glitch" in the rhythmic playback.
+
+So Roland's real accomplishment was being the first manufacturer to use a way to transfer single settings over MIDI using small, SysEx messages. (But note that Roland's method is flexible -- it also allows transfering many settings simultaneously using larger SysEx messages). This allowed patch and sequencer software to change settings in realtime.
+
+This proved so useful that Roland decided to provide this same feature with nearly every one of their products released after the S-10. And to make matters even easier, Roland standardized much of this method so that, if you know how to change individual settings on an S-10, then you pretty much know how to change individual settings on every other Roland product made since then.
+
+The good news is that many manufacturers learned from Roland's example, and now have similiar schemes.
+
+Roland address map
+In order to be able to transfer individual settings, Roland came up with the idea of an address map. All this means is that each individual setting has its own unique "location" (ie, address) where it is stored (inside of a Roland module). Just like you have a different mailing address than your neighbor does, so too each individual Roland setting has its own address. A Roland address is simply a number. So for example, while your mailing address may be "666 Some street, Anytown, USA", the address of a Roland module's master volume could be address number 14. No other setting in the module will be at that address.
+
+So, to query the current value of some Roland setting, you must tell a Roland module what address you would like to query. (You send a SysEx message to do that). The Roland module will then send back the setting (ie, its current value) at that address. (The Roland module will send back a SysEx message containing the current value). So for example, to find out what the master volume is currently set to, maybe you'll send a SysEx asking for the value at address 14. And the module sends back a SysEx containing the current value of master volume.
+
+To change an individual setting, you must tell a Roland module at which address you wish to make that change, and then tell it what you want the new value to be. (You send a SysEx message to do that). The Roland module will then store the new value at that address. So for example, to set the master volume to a value of 100, maybe you send a SysEx telling the module to store the value 100 at address 14. And the module immediately changes its master volume to that value.
+
+Now, not all Roland modules will have all the same settings. And if they do have some of the same settings, those settings may be at different addresses in different modules. But all Roland modules follow the above concept of having each setting at its own unique address, and you set or query a setting as described above.
+
+So, each Roland module may have a unique address map, and the Roland user manual is where you find the details of the address map for a given module. But before we delve into a particular module's address map, there are more things that all Roland modules have in common, so let's discuss the latter first.
+
+Roland SysEx message
+As mentioned, you query or change a setting using a SysEx message. Fortunately, Roland has maintained a bit of standardization here, so that, if you understand the SysEx messages for one module, then you've got the general idea for all of them.
+
+To change a setting, you must tell a Roland module at which address you wish to make that change, and then tell it what you want the new value to be. You do that by sending a "Data Set 1" SysEx message, which contains not only the new value, but also the address.
+
+Note: Some Roland modules support "handshaking", whereby whenever you send the module a SysEx message, it will subsequently send back a special "Ack" SysEx message to acknowledge this. For such handshaking purposes, Roland also has a "Data Set 2" SysEx message which is used in lieu of the "Data Set 1". The "Data Set 2" is used only when you want handshaking. Otherwise, the "Data Set 1" is used. This tutorial will not discuss handshaking, and instead, we'll deal only with non-handshaking SysEx transfers using "Data Set 1".
+
+To query a setting, you first must tell a Roland module what address you would like to query. You do that by sending a "Data Request 1" SysEx message, which contains the address of the setting you wish to query. The module will return a "Data Set 1" containing the current value of that setting.
+
+Note that MIDI deals only with 7-bit bytes of data. In other words, each data byte within a SysEx message must be from 0 to 127. (ie, There is a range limit of 128 possible "steps"). But also note that some Roland settings could be beyond this range. For example, maybe master volume can be set from 0 to 16,000. What is the implication of this? Well, if the setting's value can be beyond 128 different steps, then the value will be broken apart into more than one data byte within the "Data Set 1" message. We'll discuss this in more detail later. (Fortunately, most of the settings in a typical address map are limited to a range of 128 or less steps, and therefore can be easily expressed as just one data byte within a "Data Set 1" message).
+
+A Roland address is 4 (or sometimes 3, for earlier models) bytes in a "Data Set 1" or "Data Request 1" message. We'll talk more about those bytes later when we examine an address map in detail.
+
+In the typical Roland user's manual, there is a chapter entitled MIDI Implementation. This chapter lists the details of how the unit responds to MIDI messages sent to it, as well as what MIDI messages the unit is capable of generating (if any) and sending to some other MIDI device (such as a sequencer). It also contains the information you need to be able to transfer settings over MIDI. If you peruse this section, you'll eventually get to a sub-section named System Exclusive. Within this sub-section, you'll eventually get to a sub-section Data Transmission, and then finally Parameter Address Map. These last two sub-sections tell you what you need to know to transfer settings over MIDI using SysEx.
+
+You will find the "Data Set 1" and "Data Request 1" SysEx messages under Data Transmission. Let's take a look at the "Data Request 1" message for the Roland JV-1010. This is the message that you send to the JV-1010, to ask it to return a "Data Set 1" message containing the setting of interest. It has 15 bytes. Here is the JV-1010 "Data Request 1" message (and note that bytes are expressed in hexadecimal unless otherwise noted):
+
+F0	All SysEx messages begin with an F0.
+41	All Roland SysEx messages have a 41 here. Other manufacturers will have a different number here. This conclusively confirms that this is a Roland SysEx message.
+DEV_ID	This is the device ID. Think of it like a MIDI channel, but for SysEx messages only. A JV-1010 can be set to listen for SysEx messages that have only a certain value here. For example, if the number you put here is 10, then only those JV-1010's set to respond to a device ID of 10 will pay attention to this SysEx message. In this way, you can have more than one JV-1010 daisy-chained, set them to different device IDs, and then be able to query their settings individually. A Roland unit defaults to using device ID 10, so normally, you'll find a 10 here.
+6A	This is the model ID. A SysEx specifically for the JV-1010 will have a 6A here. Other Roland models will have a different number here. This conclusively confirms that this is a Roland SysEx message for a JV-1010.
+11	This is the command ID. A "Data Request 1" SysEx will have an 11 here. Other SysEx messages, such as a "Data Set 1" will have a different number here.
+ADDR_1	This is the first byte (of the 3 or 4 bytes) that make up the address of the setting whose value you wish to query. What number is here depends upon which setting's value you wish returned in a "Data Set 1". (Remember that each setting has its own unique address). This first byte is often referred to as the Most Significant Byte (MSB).
+ADDR_2	This is the second byte of the address.
+ADDR_3	This is the third byte of the address.
+ADDR_4	This is the fourth and last byte of the address. Note: For some Roland models, there are only three address bytes, and so this one is omitted.
+SIZE_1	When you send a "Data Request 1" to the JV-1010, you need to tell it how many data bytes you expect to be returned in the subsequent "Data Set 1". SIZE_1 is the first byte of this count. If you're querying an individual setting that is within the range of 0 to 128, there will be only one data byte returned, and so the SIZE bytes (in this "Data Request 1") will add up to 1. For a setting whose value can be larger than this range, it will broken up into several bytes, and therefore the SIZE bytes will be 2 or greater. In other words, SIZE_1, SIZE_2, SIZE_3, and SIZE_4 taken together represent a count of how many data bytes you expect returned in a subsequent "Data Set 1". We'll later discuss this in more detail, and you'll see the useful purpose of SIZE_1, SIZE_2, SIZE_3, and SIZE_4.
+SIZE_2	This is the second byte of the count.
+SIZE_3	This is the third byte of the count.
+SIZE_4	This is the fourth and last byte of the count. Note: For some Roland models, there are only three SIZE bytes, and so this one is omitted.
+CHECKSUM	This is the checksum. What value you put here depends upon what numbers you use for the address and size bytes above. After all, the checksum is essentially just the sum of all of those preceding bytes, and it is used for error-detection (in case a SysEx message somehow gets "garbled").
+F7	All SysEx messages end with an F7.
+
+After the JV-1010 receives a "Data Request 1", it will return a "Data Set 1" containing the value of the setting you requested. (You can also send a "Data Set 1" to the JV-1010 to change a setting to a new value). Let's take a look at the JV-1010's "Data Set 1" message. It has 11 bytes, plus the data bytes for the setting's value. (And remember that, for settings that exceed the limit of 128 steps, there will need to be more than one data byte). Here is the JV-1010 "Data Set 1" message:
+
+F0	All SysEx messages begin with an F0.
+41	All Roland SysEx messages have a 41 here.
+DEV_ID	This is the device ID.
+6A	This is the JV-1010 model ID.
+12	This is the command ID. A "Data Set 1" SysEx will have a 12 here.
+ADDR_1	This is the first byte (of the 3 or 4 bytes) that make up the address of the setting whose value is in this "Data Set 1". What number is here depends upon which setting's value is in this "Data Set 1". This first byte is often referred to as the Most Significant Byte (MSB).
+ADDR_2	This is the second byte of the address.
+ADDR_3	This is the third byte of the address.
+ADDR_4	This is the fourth and last byte of the address. Note: For some Roland models, there are only three address bytes, and so this one is omitted.
+DATA_1	This is the first byte of the settings value. For a setting that is within the range of 0 to 128, there will be only this one byte. For a setting whose value can be larger than this range, it will broken up into several bytes, and what would follow is a DATA_2, and possibly DATA_3, etc. We'll later discuss an example of a setting that requires more than one data byte.
+CHECKSUM	This is the checksum. What value you put here depends upon what numbers you use for the address and data bytes above. After all, the checksum is essentially just the sum of all of those preceding bytes.
+F7	All SysEx messages end with an F7.
+
+If you look in the JV-1010 manual, you'll notice that there is another form of the "Data Set 1" message. It is almost the same as the above message, except for the model ID, and the fact that it has only 3 address bytes instead of 4. The model ID is 42 (which is a generic Roland model number), and this is a generic "Data Set 1" format. Here's the deal. There are some settings on the JV-1010 which are exactly the same on dozens of other Roland models. For those settings, Roland decided to instead use a second, generic "Data Set 1" format. In this way, all of the models can respond to this same generic "Data Set 1" for those identical settings. But only certain settings can be transfered with this generic "Data Set 1" -- the settings that Roland has made uniform across all of its models. Those settings (often referred to as "General Standard" or "GS" settings) will be noted in the address map, so we'll discuss an example later. For other JV-1010 specific settings, you must use the "Data Set 1" containing the JV-1010 model ID shown above.
+
+JV-1010 Address Map
+In order to understand the particulars of how to work with a Roland address map, and the "Data Request 1" and "Data Set 1" messages, we'll need to study a particular example. I'll choose the Roland JV-1010. This is a typical Roland module, and among the items that you can edit, are 2 "Rhythm Sets", 128 Patches, and 32 "Performances" (containing "Parts" that reference those 128 User patches, as well as any of the preset patches). If you're unfamiliar with these elements of Roland's architecture, you may wish to read The architecture of Roland sound modules. Although the examples I'll be showing you here are specific to the JV-1010, you'll employ the same concepts with other Roland modules.
+
+The section of the manual that details the JV-1010 address map begins at the label Parameter Address Map. This section consists of a series of charts (and some footnotes). The very first chart is an overview of where all of the large items are to be found. By large items, I mean things such as "Performances", "Rhythm Sets", "Global settings", and "Patches". If you're familiar with a programming language such as C, think of one of these large items as a "structure". Of course, a large item can be comprised of smaller items. For example, a Performance may contain several "Parts" (structures) inside of it. So later on, there will be a chart that shows you the details of what is inside a Performance. Let's look at the overview of the JV-1010 address map. The chart is as so:     
+Start
+      Address	Description	 
+00 00 00 00	System	1-1
+01 00 00 00	Temporary Performance	1-2
+02 00 00 00	Performance Mode Temporary Patch(part 1)	1-3
+02 01 00 00	Performance Mode Temporary Patch(part 2)	 
+:		 
+02 08 00 00	Performance Mode Temporary Patch(part 9)	 
+02 09 00 00	Temporary Rhythm Setup	1-4
+02 0A 00 00	Performance Mode Temporary Patch(part 11)	1-3
+:		 
+02 0F 00 00	Performance Mode Temporary Patch(part 16)	 
+03 00 00 00	Patch Mode Temporary Patch	1-3
+10 00 00 00	User Performance USER:01	1-2
+10 01 00 00	User Performance USER:02	 
+:		 
+10 1F 00 00	User Performance USER:32	 
+10 40 00 00	User Rhythm Setup USER:1	1-4
+10 41 00 00	User Rhythm Setup USER:2	 
+11 00 00 00	User Patch USER:001	1-3
+11 01 00 00	User Patch USER:002	 
+:		 
+11 7F 00 00	User Patch USER:128	 
+
+What this above chart is showing you is that there is a structure called a System and it is located (starting) at address 00 00 00 00. You don't yet know what settings (ie, fields) are contained inside of this System structure. There will be another chart later that will show you the actual contents of this System structure. Right now, all you know is that it starts at address 00 00 00 00. (ie, The very first setting inside of the System structure will be at address 00 00 00 00. The remaining settings inside of it will be at address 00 00 00 01 and above).
+
+The chart also shows you that there is a structure called a Temporary Performance and it is located (starting) at address 01 00 00 00. Again, you don't yet know what settings are contained inside of this Temporary Performance structure. There will be another chart later that will show you the actual contents of it. Right now, all you know is that it starts at address 01 00 00 00. (ie, The very first setting inside of the Temporary Performance structure will be at address 01 00 00 00. The remaining settings will be at address 01 00 00 01 and above).
+
+If you look down the chart, you will see numerous other structures shown. For example, the JV-1010 has 32 User Performances (ie, Performances whose settings can be edited). The settings for each performance are stored in a Performance structure. Again, you don't yet know the details of what is inside of it. But if you look at the chart, you will see that there are 32 of them. (Actually, only 3 of the 32 are shown in the chart. The dots in the chart, where an address would normally be shown, indicate that some items have been omitted due to repetition. You're supposed to mentally fill in the blanks). You can see that the Performance structure for the first User Performance (ie, 1) starts at address 10 00 00 00. The Performance structure for the second User Performance starts at address 10 01 00 00. Although they aren't shown, you can guess (by the repeating pattern) that the Performance structure for the third User Performance will start at address 10 02 00 00, and the Performance structure for fourth User Performance will start at address 10 03 00 00. The Performance structure for User Performance 32 (ie, the last one) starts at address 10 1F 00 00.
+
+The JV-1010 has two User Rhythm Sets (ie, drum kits). If you look at the chart, you will see that the settings for each Rhythm Set are stored in a User Rhythm Setup structure. Again, you don't yet know the details of what is inside of it. But if you look at the chart, you will see that the User Rhythm Setup structure for the first kit starts at address 10 40 00 00, and the User Rhythm Setup structure for the second kit starts at address 10 41 00 00.
+
+Finally, the JV-1010 has 128 User Patches. You can see that they are at the bottom of the chart. A patch's settings are stored in a User Patch structure, and the first patch's structure starts at address 11 00 00 00. The last patch's structure starts at address 11 7F 00 00. Again, many of them have been omitted due to repetition (and to make the chart therefore smaller), and you have to mentally fill in the blanks.
+
+So, this chart is an overview of where (ie, at which address) all of the structures (configurable settings) will be found. But you still don't know the details of what settings are inside each structure. That is what the other charts are for. If you look in the above chart, you'll notice that there are numbers on the far right. For example, beside the System structure, you see the designation 1-1. What this tells you is that, the details for the System structure can be found in another chart labeled 1-1. Sure enough, if you look at the other charts in the manual, you'll find one that is labeled 1-1 System. This shows you the contents of the System structure. Let's take a look at that chart:  
+Offset
+       Address	Description	 
+00 00	System Common	1-1-1
+10 00	Part 1 Scale Tune	1-1-2
+11 00	Part 2 Scale Tune	 
+:		 
+1F 00	Part 16 Scale Tune	 
+20 00	Patch Mode Scale Tune	1-1-2
+
+Ok, this structure starts with another structure inside of it, called a System Common structure. This is something that you'll need to know -- sometimes structures have other structures inside of them. The above chart isn't showing you the contents of that System Common structure, but you can probably guess from the designation 1-1-1 next to it that there will be another chart labeled 1-1-1 System Common, and it will show you what is inside this System Common. All you know from the above is that, the System Common is at an address offset of 00 00 within the System structure. What is meant by an address offset? Well, this offset is added to the address shown in the overview chart in order to determine the address that you'll use with the "Data Request 1" or "Data Set 1" message. If you review the overview chart, you'll recall that the System structure begins at address 00 00 00 00. So we add the offset for the System Common as so:
+
+   00 00 00 00
++        00 00
+---------------
+   00 00 00 00
+In other words, the System Common structure (within the System structure) starts at address 00 00 00 00.
+There is another structure called Part 1 Scale Tune inside of the System structure. Let's consider the Part 1 Scale Tune structure. First of all, you'll find the details of this structure in another chart labeled with the designation 1-1-2 Scale Tune. There are 17 such structures within a System structure, with the first one at offset 10 00 (and the last at offset 20 00). So for example, if we wanted to find the start address of Part 16 Scale Tune, we add to the System's start address as so:
+
+   00 00 00 00
++        1F 00
+---------------
+   00 00 1F 00
+In other words, the Part 16 Scale Tune structure (within the System structure) starts at address 00 00 1F 00.
+Ok, let's take a look at the System Common structure. You'll find it in the chart labeled 1-1-1 System Common, and it looks like this (actually, it is a rather large chart, so I am going to reproduce only the beginning of it):
+
+Offset
+        Address	Size	Description	Data (value)
+00 00	0000 00aa	Sound Mode	0 - 2     *1
+00 01	0aaa aaaa	Performance Number	0 - 127  *2
+00 02	0000 00aa	Patch Group Type	0 - 2     *3
+00 03	0aaa aaaa	Patch Group ID	0 - 127
+# 00 04	0000 aaaa	Patch Number	0 - 255
+ 	0000 bbbb	 	        (001 - 256)
+
+Now we're actually getting to some Roland settings. You'll notice that this chart lists numerous settings and their allowable "data values" (ie, the range of values that the setting is allowed to encompass). Note above that the data values for "Sound Mode" are shown as 0 - 2. This means that the Sound Mode's data value can be 0, 1, or 2. The data values for "Performance Number" are 0 - 127. This means that the data value can be any number from 0 to 127 inclusive.
+
+One thing that the Roland manual doesn't really tell you is what each setting does. For example, what is the "Sound Mode" setting above? Sometimes there will be a footnote beneath the chart to help clue you in. For example, on the far right in the above chart, you'll see a *1 shown beside Sound Mode's data range. This is a footnote indication. It means that, below this chart, you'll find some footnotes, and footnode 1 tells a little more about what the Sound Mode data values mean. Indeed, below the chart, you'll see footnote 1 as so:
+
+*1      Performance, Patch, GM
+This is telling you that, when Sound Mode's value is 0, this pertains to "Performance" mode. When Sound Mode's value is 1, this pertains to "Patch" mode. And when Sound Mode's value is 2, this pertains to "GM" mode. You can probably guess from this that the Sound Mode setting determines whether the JV-1010 is in Performance (multi-timbral) mode, Patch (single patch playback only) mode, or GM (automatically limited to its 128 GM patches in multi-timbral) mode.
+Let's look at Performance Number. It has footnote 2 which is:
+
+*2      USER:01 - USER:32, <CARD:01 - CARD:32>, PR-A:01 - PR-A:32, PR-B:01 - PR-B:32
+This is telling you that, when Performance Number's value is 0 to 31, this is one of the 32 User Performances. When Performance Number's value is 32 to 63, this is one of the 32 Performances on a Voice Expansion card plugged into the JV-1010 (if there is such a card. The brackets indicate that this is an optional component). When Performance Number's value is 64 to 95, this is one of the 32 Preset Performances in bank A. And when Performance Number's value is 96 to 127, this is one of the 32 Preset Performances in bank B. You can guess from this that Performance Number indicates the currently selected Performance (and the Performance selected when the JV-1010 powers up).
+So the footnote tells you how to regard the data values, and therefore can be used to deduce the purpose of some setting.
+
+As you peruse the above chart, you'll see that each setting has its own address offset. Now, remember that this System Common structure is inside of the System structure. So, to find the address of the Sound Mode setting, we need to add the Sound Mode offset to the System Common offset (within System), and then add to the address of System as it appears in the overview chart. Here is the result:
+
+   00 00 00 00     (Address of System within overview)
++        00 00     (Offset of System Common within System)
++        00 00     (Offset of Sound Mode setting within System Common)
+---------------
+   00 00 00 00
+In other words, Sound Mode setting is at address 00 00 00 00.
+How about the Performance Number? It's address is:
+
+   00 00 00 00     (Address of System within overview)
++        00 00     (Offset of System Common within System)
++        00 01     (Offset of Performance Number setting within System Common)
+---------------
+   00 00 00 01
+In other words, Performance Number setting is at address 00 00 00 01.
+Now let's look at the Size shown for each setting. This is a bit of a misnomer. What the chart is showing you isn't really the size, but rather, showing you how the value is "broken up" into data bytes within the "Data Set 1" message. Roland displays the bytes in binary notation (ie, all 8 bits of each data byte, displayed as nibbles). If you're unfamiliar with this, you may need to read up on binary notation. For example, the Size shown for Sound Mode is:
+
+0000 00aa
+The aa is where Sound Mode's data value goes. (ie, Bits 0 and 1 are the actual data, and the remaining bits are always 0). This make sense because Sound Mode can be only 0, 1, or 2. And it takes only 2 bits to express that data range. Because most Roland data values are within the range of 0 to 127, Roland typically right-justifies the bits in one data byte, and so the data value is put into the "Data Set 1" message exactly as it is specified in the chart. In other words, you'll actually use the data byte of 0, 1, or 2 verbatim in the "Data Set 1" message to set Sound Mode.
+Ok, we're just about ready to create an example "Data Set 1". Let's assume that you wish to set Sound Mode to the value 2. Remember that we figured out Sound Mode's address as 00 00 00 00. So we need to plug those 4 bytes into the "Data Set 1" for ADDR_1, ADDR_2, ADDR_3, and ADDR_4 respectively. And we can see from the chart that Sound Mode requires only 1 byte (because there are only 8 bits shown for its Size). So, we'll put the value 2 as a single DATA_1 byte in the "Data Set 1". Here then is our message to set Sound Mode to the value 2 (assuming a device ID of 10):
+
+F0	 
+41	 
+10	 
+6A	 
+12	 
+00	This is the first byte (of the 4 bytes) that make up the address of the Sound Mode setting.
+00	This is the second byte of the address.
+00	This is the third byte of the address.
+00	This is the fourth and last byte of the address.
+02	This is the data byte to set Sound Mode to 2.
+CHECKSUM	This is the checksum. What value you put here depends upon what numbers you use for the address and data bytes above.
+F7	 
+
+All that remains is to calculate the checksum, which we'll learn to do later, and you can send this message to the JV-1010 to immediately change the Sound Mode to 2 (ie, GM mode).
+
+Let's take another example to set Performance Number to 127 (ie, 7F hexadecimal). We already saw that its address is 00 00 00 01. And from the chart, you can see that its Size is still just one byte (ie, 8 bits shown). The bits are right-justified, so we use the data value 7F verbatim. Here is the "Data Set 1" message:
+
+F0	 
+41	 
+10	 
+6A	 
+12	 
+00	This is the first byte (of the 4 bytes) that make up the address of the Performance Number setting.
+00	This is the second byte of the address.
+00	This is the third byte of the address.
+01	This is the fourth and last byte of the address.
+7F	This is the data byte to set Performance Number to 127.
+CHECKSUM	This is the checksum. What value you put here depends upon what numbers you use for the address and data bytes above.
+F7	 
+
+What if you wanted to query the current value of Performance Number? You send a "Data Request 1" asking for it, and the Roland returns the above "Data Set 1". Here is the "Data Request 1" to query Performance Number (again assuming a device ID of 10). Note that since we expect only one data byte in the returned "Data Set 1", our SIZE_1, SIZE_2, SIZE_3, and SIZE_4 are 00 00 00 01.
+
+F0	 
+41	 
+10	 
+6A	 
+11	 
+00	This is the first byte (of the 4 bytes) that make up the address of the Performance Number setting.
+00	This is the second byte of the address.
+00	This is the third byte of the address.
+01	This is the fourth and last byte of the address.
+00	This is the first byte (of the 4 bytes) that make up the count of the expected data bytes.
+00	This is the second byte of the count.
+00	This is the third byte of the count.
+01	This is the fourth and last byte of the count.
+CHECKSUM	This is the checksum. What value you put here depends upon what numbers you use for the address and size bytes above.
+F7	 
+
+Checksum
+Now it's time to figure out what Checksum value to use. You have to individually calculate the Checksum for each SysEx message (since it will likely be different in various messages).
+
+When calculating the Checksum for a "Data Set 1", you must add up the 4 address bytes and the data bytes. Then you divide by 128 and take the remainder. Finally, you subtract the remainder from 128. You should end up with a value of 128 or less if you did it correctly. This is the Checksum. If the Checksum is 128, then substitute a value of 0.
+
+Let's take the following example:
+
+F0	 
+41	 
+10	 
+6A	 
+12	 
+00	This is the first byte (of the 4 bytes) that make up the address of the Performance Number setting.
+00	This is the second byte of the address.
+00	This is the third byte of the address.
+01	This is the fourth and last byte of the address.
+7F	This is the data byte to set Performance Number to 127.
+CHECKSUM	This is the checksum. We'll calculate it below.
+F7	 
+
+The 4 address bytes are 0, 0, 0, and 1, and the data byte is 7F (ie, 127). The sum is therefore 128. If you divide 128 by 128, you get a remainder of 0. (ie, 128 goes into 128 exactly once, so there is a remainder of 0). If you then subtract 0 from 128, you end up with a Checksum of 128. So, we substitute a value of 0. Here then is the completed "Data Set 1":
+
+F0	 
+41	 
+10	 
+6A	 
+12	 
+00	 
+00	 
+00	 
+01	 
+7F	 
+00	This is the checksum.
+F7	 
+
+A typical Roland manual will have a section explaining the Checksum, and list a few examples.
+
+The Checksum for a "Data Request 1" is calculated in the same way, except you add up the 4 address bytes and the 4 size (count) bytes.
+
+To aid in calculating checksums, you can download my Roland Checksum Calculator for Windows. C Programmers can download the C source code as an example, or MIDI REXX programmers can download a REXX version.
+
+Settings with multiple DATA bytes
+There are some settings whose values are too large for only one data byte in a "Data Set 1". Let's take an example of such a setting. In the System Common structure, the Patch Number setting is such an example. Let's review the chart for the System Common:
+
+Offset
+        Address	Size	Description	Data (value)
+00 00	0000 00aa	Sound Mode	0 - 2     *1
+00 01	0aaa aaaa	Performance Number	0 - 127  *2
+00 02	0000 00aa	Patch Group Type	0 - 2     *3
+00 03	0aaa aaaa	Patch Group ID	0 - 127
+# 00 04	0000 aaaa	Patch Number	0 - 255
+ 	0000 bbbb	 	        (001 - 256)
+
+First, you'll notice that there is a # sign next to the address offset. Roland uses this to indicate a setting that requires its value to be broken up into more than one byte in a "Data Set 1" message. The next thing that you'll notice is that the allowable range for Patch Number is any value from 0 to 255 inclusive. Obviously, this is beyond the range limit of 128 steps, and that's why we require more than one byte. In fact, if you look at the Size field, you'll see that we need 2 bytes. After all, there are two groups of 8 bits shown, as so:
+
+0000 aaaa
+0000 bbbb
+What you should notice from the above is that you are expected to break apart the Patch Number value into 2 bytes, by putting the high 4 bits into the first byte (right-justified), and the low 4 bits into the second byte (also right-justified). For example, let's assume that we want to set the Patch Number to the value 200. That would be hex C8. So, we take the C and put it in the first byte, and take the 8 and put it in the second byte. Of course, for the address bytes, we calculate them as so:
+   00 00 00 00     (Address of System within overview)
++        00 00     (Offset of System Common within System)
++        00 04     (Offset of Patch Number setting within System Common)
+---------------
+   00 00 00 04
+And to calculate the Checksum, we add the 4 address bytes, and the 2 data bytes (0 + 0 + 0 + 4 + 12 + 8), divide by 128 and get the remainder (24), and subtract this remainder from 128 (104, or hex 68).
+So, here is our "Data Set 1" message:
+
+F0	 
+41	 
+10	 
+6A	 
+12	 
+00	This is the first byte (of the 4 bytes) that make up the address of the Patch Number setting.
+00	This is the second byte of the address.
+00	This is the third byte of the address.
+04	This is the fourth and last byte of the address.
+0C	This is the first data byte to set Patch Number to C8.
+08	This is the second data byte to set Patch Number to C8.
+68	This is the checksum.
+F7	 
+
+Of course, to request the currrent value of Patch Number, we need to send a "Data Request 1", and indicate that we expect back 2 data bytes.
+
+F0	 
+41	 
+10	 
+6A	 
+11	 
+00	This is the first byte (of the 4 bytes) that make up the address of the Patch Number setting.
+00	This is the second byte of the address.
+00	This is the third byte of the address.
+04	This is the fourth and last byte of the address.
+00	This is the first byte (of the 4 bytes) that make up the count of the expected data bytes.
+00	This is the second byte of the count.
+00	This is the third byte of the count.
+02	This is the fourth and last byte of the count. Note that we expect back 2 bytes
+7A	This is the checksum.
+F7	 
+
+Transfering an entire structure
+If you wanted to dump all of the Roland JV-1010 settings to a computer, it would take a very long time to do so if you had to individually request each setting's value, and receive back a "Data Set 1" for each setting. Fortunately, Roland's implementation is more sophisticated and allows you to request (with a single "Data Request 1") an entire structure's settings. All those settings will be sent back in a single "Data Set 1" message, containing all of the data bytes for all of the settings. The first data byte(s) in the "Data Set 1" will be for the first setting within the structure. The next data byte(s) will be for the second setting, etc.
+
+When you request an entire structure's settings, there are 2 things that you need to do with your "Data Request 1":
+
+For the ADDR_1, ADDR_2, ADDR_3, and ADDR_4, you must use the address of the first setting within the structure.
+For the SIZE_1, SIZE_2, SIZE_3, and SIZE_4, you must specify the total number of data bytes for all of the settings which you expect returned in the "Data Set 1".
+Let's assume that you wish to request the entire System Common structure (within the System structure). Remember that the System Common structure starts at address 00 00 00 00. (ie, Its first setting, "Sound Mode", is at that address). So that's what we use for ADDR_1, ADDR_2, ADDR_3, and ADDR_4.
+
+Now we just need to figure out how many data bytes we expect back. If you peruse the System Common's chart (ie, chart labeled 1-1-1), and look at the bottom of the chart, you'll see the designation Total size and it is shown as 00 00 00 62. (In other words, there are a total of 98 data bytes to be transfered (in a "Data Set 1") when the entire System Common structure's settings are transfered.
+
+So, here is our "Data Request 1" to ask the JV-1010 to return a "Data Set 1" containing the 98 bytes that comprise the values of all settings in the System Common structure:
+
+F0	 
+41	 
+10	 
+6A	 
+11	 
+00	This is the first byte (of the 4 bytes) that make up the address of the System Common's first setting.
+00	This is the second byte of the address.
+00	This is the third byte of the address.
+00	This is the fourth and last byte of the address.
+00	This is the first byte (of the 4 bytes) that make up the count of the expected data bytes.
+00	This is the second byte of the count.
+00	This is the third byte of the count.
+62	This is the fourth and last byte of the count. Note that we expect back 98 bytes
+1E	This is the checksum. We add up the address and size bytes (0 + 0 + 0 + 0 + 0 + 0 + 0 + 98), divide into 128 and take the remainder of 98, and then subtract from 128 to get a checksum of 30 (or 1E hex)
+F7	 
+
+The JV-1010 will now send back a "Data Set 1" containing those 98 data bytes. The first byte will be Sound Mode's value. The second byte will be Performance Number's value. The third byte will be Patch Group Type's value. The fourth byte will be Patch Group ID's value. The fifth and sixth bytes will be Patch Number's value. (Remember that Patch Number's value must be broken up into two bytes). Etc.
+
+You can likewise send a single "Data Set 1" containing 98 data bytes to set the values of all of the System Common's settings.
+
+There is one final caveat that you need to be aware of when tranfering an entire structure. In order to avoid any problems with hardware input buffers, Roland limits a "Data Set 1" message to a maximum of 256 bytes. Because there are 11 other bytes in a JV-1010's "Data Set 1", that means that there can be only 245 data bytes in the message. So, what happens if you need to transfer a structure with a size greater than 245? Well, you have to use more than one "Data Set 1" message to transfer the settings. You'll have to send the first 245 data bytes (or so) in the first "Data Set 1", and then follow-up with a second "Data Set 1" which picks up with the remaining data bytes. The address you will use in the second message will be for the setting whose data byte starts off the second message. So, you may need to do some math to add 245 (or so) to the address that you used in the previous message.
+
+Delays
+You should always give a Roland module about 40 milliseconds to process a "Data Set 1" message that you send it, before subsequently sending another MIDI message (including another "Data Set 1") to the module. If you don't, the module may report an error.

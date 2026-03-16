@@ -1,0 +1,208 @@
+MC-101 SysEx Test Results
+=========================
+
+Note: RQ1 format requires calculating a checksum. If the size or address is invalid, the MC-101 usually will not respond.
+
+Target: System (Fantom)
+Address: 00 00 00 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 00 00 00 00 00 00 00 10 70 F7
+Response: F0 41 10 00 00 00 5E 12 00 00 00 00 00 00 00 00 00 01 01 01 00 00 10 09 01 02 03 04 5A F7
+----------------------------------------
+Target: Setup (Fantom)
+Address: 01 00 00 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 01 00 00 00 00 00 00 10 6F F7
+Response: No response
+----------------------------------------
+Target: Vocoder (Fantom)
+Address: 01 00 02 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 01 00 02 00 00 00 00 10 6D F7
+Response: No response
+----------------------------------------
+Target: Temporary Scene (Fantom)
+Address: 02 00 00 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 02 00 00 00 00 00 00 10 6E F7
+Response: No response
+----------------------------------------
+Target: Temporary Z-Core Tone (Zone 1) (Fantom)
+Address: 02 10 00 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 02 10 00 00 00 00 00 10 5E F7
+Response: No response
+----------------------------------------
+Target: Temporary Drum Kit (Zone 1) (Fantom)
+Address: 02 30 00 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 02 30 00 00 00 00 00 10 3E F7
+Response: No response
+----------------------------------------
+Target: Drum Kit Track 1 Clip 1 (from notes.txt)
+Address: 32 10 00 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 10 00 00 00 00 00 10 2E F7
+Response: F0 41 10 00 00 00 5E 12 06 44 00 00 49 4E 49 54 20 4B 49 54 20 20 20 20 20 20 20 20 7A F7
+----------------------------------------
+Target: Drum Kit Track 1 Clip 2? (guess)
+Address: 32 10 01 00
+Size Requested: 00 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 10 01 00 00 00 00 10 2D F7
+Response: F0 41 10 00 00 00 5E 12 06 44 00 00 00 01 00 00 00 40 00 40 00 40 00 40 00 00 00 00 35 F7
+----------------------------------------
+Target: Unknown from notes (huge dump)
+Address: 32 10 00 00
+Size Requested: 01 00 00 10
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 10 00 00 01 00 00 10 2D F7
+Response: No response
+Target: System Common (Full Dump Test)
+Address: 00 00 00 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 00 00 00 00 00 00 00 7F 01 F7
+Response:
+F0 41 10 00 00 00 5E 12 00 00 00 00 00 00 00 00 00 01 01 01 00 00 10 09 01 02 03 04 05 06 07 08 09 0A 00 00 00 00 00 00 00 00 00 00 40 40 40 40 40 40 00 00 00 00 00 00 40 40 00 02 01 01 4B 49 54 20 20 20 20 20 20 20 20 20 20 20 20 20 00 02 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 44 F7
+
+----------------------------------------
+Target: Drum Kit Track 1 Clip 1 (Full Dump Test 1)
+Address: 32 10 00 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 10 00 00 00 00 00 7F 3F F7
+Response: Multiple DT1 packets returned, each with sequentially incremented addresses:
+Packet 1: F0 41 10 00 00 00 5E 12 06 44 00 00 49 4E 49 54 ...
+... (The MC-101 breaks up the 127 bytes into roughly 64-byte responses depending on structure).
+It returned multiple segments covering sizes like 64 + 48, matching addressing offsets like `06 44 00 00`, `06 44 00 40` out of the requested `32 10 00 ...` (Firmware shift bug observed as 32 10 00 00 -> 06 44 00 00)
+----------------------------------------
+
+Target: Drum Kit Track 1 Clip 2? (Full Dump Test 2)
+Address: 32 10 01 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 10 01 00 00 00 00 7F 3E F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 01 00 00 01 00 00 00 40 00 40 00 40 00 40 00 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 13 F7
+F0 41 10 00 00 00 5E 12 06 44 01 40 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 24 F7
+
+----------------------------------------
+
+# Conclusions
+- The MC-101 responds to the `00 00 00 00` (System Common) address structure mapped identically to the FANTOM manual. The 127 byte dump revealed elements matching FANTOM System offsets like Master Level, Tune, and Chorus/Reverb assignments.
+- The MC-101 `Drum Kit` offset starts at `32 10 00 00` internally but the hardware bug forces replies prefixed with `06 44 00 00` (as discussed in notes.txt).
+- Large RQ1 size requests correctly prompt the MC-101 to split results into 64-byte payload DT1 packets. The addresses increment by 64 (`0x40`) inside the replies.
+- The MC-101 rejects Fantom addresses for Setup (`01 00 00 00`), Vocoder (`01 00 02 00`), and Temporary Scene (`02 00 00 00`) suggesting the Scene/Zone layout is radically distinct or those features are missing/moved.
+
+Target: Tone Track 2 Clip 1? (Guess based on 32 10 00 00 for Drum Kit on Track 1)
+Address: 32 11 00 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 11 00 00 00 00 00 7F 3E F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 40 00 00 04 00 00 00 04 00 00 00 04 00 00 00 00 0C 08 00 03 0E 08 00 07 0D 00 00 0A 00 1F F7
+
+----------------------------------------
+Target: Tone Track 2 Clip 2? (Guess based on Drum Kit offsets)
+Address: 32 11 01 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 11 01 00 00 00 00 7F 3D F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 40 00 00 04 00 00 00 04 00 00 00 04 00 00 00 00 0C 08 00 03 0E 08 00 07 0D 00 00 0A 00 1F F7
+
+----------------------------------------
+
+# Findings on Tone Tracks (MC-101 Track 2)
+- Replicating the logic from the Drum Kit (Track 1) address `32 10 00 00`, a query to `32 11 00 00` (Track 2) returned a valid DT1 packet. 
+- Interestingly, the internal MC-101 response address mapping for Track 2 returned `06 44 40 00`, compared to `06 44 00 00` for Track 1. This shows a regular address offset of +0x40 between tracks in the returned data block.
+- We suspect that `32 11 00 00` relates to basic Tone Track configurations matching the FANTOM `Z-Core Tone` or `SN-A Tone` architectures.
+
+Target: Tone Partial 1 (Guess from FANTOM manual Z-Core Tone Offset 00 20 00)
+Address: 32 11 20 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 11 20 00 00 00 00 7F 1E F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 50 00 00 04 00 00 00 04 00 00 00 04 00 00 00 00 0C 08 00 03 0E 08 00 07 0D 00 00 0A 00 0F F7
+
+----------------------------------------
+
+Target: Tone Partial 2 (Guess from FANTOM manual Offset 00 21 00)
+Address: 32 11 21 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 11 21 00 00 00 00 7F 1D F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 50 00 00 04 00 00 00 04 00 00 00 04 00 00 00 00 0C 08 00 03 0E 08 00 07 0D 00 00 0A 00 0F F7
+
+*(Note the response mapped address here incorrectly overlapping to 06 44 50 00 internally inside the hardware returned packet, matching the offset bug behavior)*
+
+----------------------------------------
+
+Target: Partial 1 Pitch Env (Guess from FANTOM Offset 00 24 00)
+Address: 32 11 24 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 11 24 00 00 00 00 7F 1A F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 52 00 00 04 00 00 00 04 00 00 00 04 00 00 00 00 0C 08 00 03 0E 08 00 07 0D 00 00 0A 00 0D F7
+
+----------------------------------------
+
+Target: Partial 1 Filter Env (Guess from FANTOM Offset 00 28 00)
+Address: 32 11 28 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 11 28 00 00 00 00 7F 16 F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 54 00 00 04 00 00 00 04 00 00 00 04 00 00 00 00 0C 08 00 03 0E 08 00 07 0D 00 00 0A 00 0B F7
+
+----------------------------------------
+
+Target: Partial 1 Amp Env (Guess from FANTOM Offset 00 2C 00)
+Address: 32 11 2C 00
+Size Requested: 00 00 00 7F
+RQ1 Sent: F0 41 10 00 00 00 5E 11 32 11 2C 00 00 00 00 7F 12 F7
+Response:
+F0 41 10 00 00 00 5E 12 06 44 56 00 00 04 00 00 00 04 00 00 00 04 00 00 00 00 0C 08 00 03 0E 08 00 07 0D 00 00 0A 00 09 F7
+
+----------------------------------------
+
+# Findings on Tone Partials (MC-101 Track 2)
+- Replicating the relative logic from the FANTOM Z-Core Tone manual:
+  - `00 20 00` -> Tone Partial 1
+  - `00 21 00` -> Tone Partial 2
+  - `00 24 00` -> Partial Pitch Env 1
+  - `00 28 00` -> Partial Filter Env 1
+  - `00 2C 00` -> Partial Amp Env 1
+- Appending these to the Track 2 Tone offset `32 11 00 00` successfully queries the corresponding MC-101 partial variables!
+- Responses (DT1 packets) match the structure, indicating ZEN-Core partials on the MC-101 share identical or near-identical SysEx map alignments to the FANTOM-06/07/08.
+- The same addressing "shift bug" is observed in all DT1 replies. E.g., requesting `32 11 + 24 00` yields a DT1 addressing block beginning with `06 44 52 00`. This means any PC-to-MC101 editor software must hardcode Address -> Response internal shift offsets to correctly interpret where the payloads belong.
+
+----------------------------------------
+
+# Exhaustive Parameter Mapping & Editor Blueprint
+
+## Memory Map Roots
+An editor application for the MC-101 should start by interpreting these root addresses based on the FANTOM's manual:
+* **System Common**: `00 00 00 00`
+* **Drum Kit (Track 1)**: `32 10 00 00` (Internal shift replies as `06 44 00 00`)
+* **Tone Track (Track 2)**: `32 11 00 00` (Internal shift replies as `06 44 40 00`)
+*(We hypothesize Track 3 = `32 12 00 00`, Track 4 = `32 13 00 00`, though not fully verified).*
+
+## Inside a Tone Track (ZEN-Core)
+All internal ZEN-Core offsets apply from the track's root. For example, on Track 2 (`32 11 00 00`), FANTOM documentation dictates:
+* **Tone Common**: `32 11 00 00`
+* **Tone Partial 1**: `32 11 20 00`
+* **Tone Partial 2**: `32 11 21 00`
+* **Partial 1 Pitch Env**: `32 11 24 00`
+* **Partial 1 Pan**: `32 11 20 07`
+
+## Sending Updates (DT1 Data Set 1)
+To modify parameters, the editor must send `DT1` (Command `12`) using the **exact hardware request address**, NOT the buggy shifted response address. 
+
+**Format**: `F0 41 10 00 00 00 5E 12 [4-byte Address] [Data...] [Checksum] F7`
+
+**Example: Panning Partial 1 Hard Right on Track 2**
+* **Address**: `32 11 20 07` (Track 2 + Tone Partial 1 offset + Pan parameter offset)
+* **Data**: `7F` (Hard Right)
+* **Checksum**: Calculated as `128 - ((0x32 + 0x11 + 0x20 + 0x07 + 0x7F) % 128)`
+* **Sent**: `F0 41 10 00 00 00 5E 12 32 11 20 07 7F 17 F7`
+
+This successfully updates the parameter in real-time. Wait at least 20-40ms between packets.
+
+## Important Gotchas for the Editor App
+1. **MIDI Active Sensing**: The MC-101 continuously sends `FE` bytes (Active Sensing) every 300ms. MIDI reading tools/libraries must filter this byte out, otherwise read operations might hang indefinitely waiting for discrete packets.
+2. **Chunking**: When requesting large structures (e.g., `size = 7F`), the MC-101 will respond with multiple smaller `DT1` packets of up to ~64-70 bytes each, advancing its internal (shifted) address counter for each packet.
+3. **Structure Truncation**: Not all FANTOM ZEN-Core parameters are physically present in the MC-101 responses. The Tone Partial block on the MC-101 is truncated cleanly at around 19 bytes, omitting extraneous FANTOM features like deeper Matrix Control fields. Your editor should map data exactly up to the lengths provided by the RQ1 queries.

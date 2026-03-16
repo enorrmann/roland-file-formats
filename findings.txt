@@ -1,0 +1,38 @@
+# Roland MC-101 SysEx Findings
+
+## Project Goal
+Guess and reverse-engineer the System Exclusive (SysEx) messages sent and received by a Roland MC-101 synthesizer/groovebox connected via USB.
+
+## Environment & Tools
+- Connection: USB MIDI (ALSA port `hw:3,0,0`)
+- Tool: `amidi` (ALSA RawMIDI utility)
+- Basic send command: `amidi -p hw:3,0,0 -S "<sysex_hex>"`
+
+## Roland SysEx Protocol Notes
+- Standard Roland SysEx prefix: `F0 41`
+- Device ID usually: `10`
+- Command IDs: 
+  - `11` = Data Request (RQ1)
+  - `12` = Data Set (DT1)
+- General Message Format: `F0 41 <DevID> <ModelID> <CommandID> <AddressBytes> <DataBytes> <Checksum> F7`
+- Modern Roland devices (like the MC-101) use 4 bytes for Addresses and 4 bytes for Sizes in requests.
+- Checksum: Sum of Address and Data/Size bytes, modulo 128, subtracted from 128.
+
+## MC-101 Specific Info
+- Model ID: Confirmed as related to `5E` / `00 00 00 5E` for the MC-101.
+- Identity Request (Universal SysEx): Sent `F0 7E 10 06 01 F7`. 
+  - **Response received**: `F0 7E 7F 06 02 41 5E 03 00 00 00 01 00 00 F7`
+  - *Breakdown*: `7F` (Device ID, indicating broadcast/all), `06 02` (Identity Reply), `41` (Roland Manufacturer ID), `5E 03` (Family ID), `00 00` (Member ID), `00 01 00 00` (Revision), `F7` (End).
+- Sequence/Play command observed: `F0 41 17 76 FB F7`
+- Example request (Drum Kit Common for track 1, clip 1): `F0 41 10 00 00 00 5E 11 32 10 00 00 00 00 00 19 00 F7`
+- **Firmware Quirk identified**: When requesting address `32 10 00 00`, the MC-101 replies with `06 44 00 00`. This suggests an internal shift or a 7-bit/8-bit conversion error in the Roland firmware.
+
+## SVZ File Format (Drum Kits)
+Partially mapped structure:
+- Offset 0: Header (136 bytes), starts with `SVZa`
+- Offset 136: Common block (112 bytes), contains Kit Name ("INITIAL KIT")
+- Offset 248: Compressor info (48 bytes, 6 compressors * 8 bytes)
+- Offset 296: Repeating group 1 (1760 bytes, 88 groups * 20 bytes)
+- Offset 2056: Repeating group 2 (1408 bytes, 88 groups * 16 bytes)
+- Offset 3464: Footer (20 bytes, ending with CRC32)
+- Offset 3484: Repeating group 3 (19008 bytes, 88 groups * 216 bytes)
