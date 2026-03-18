@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>MC-101 SysEx Tester</title>
+    <script src="mc101_sysex.js"></script>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        h2 {
+            color: #7ec8e3;
+        }
+
+        label {
+            display: block;
+            margin-top: 8px;
+            color: #aaa;
+        }
+
+        select,
+        input[type=number],
+        button {
+            background: #2e2e2e;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+
+        button {
+            cursor: pointer;
+            background: #304d6e;
+            color: #fff;
+            margin-right: 8px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #3e6b96;
+        }
+
+        #log {
+            margin-top: 20px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            padding: 12px;
+            min-height: 120px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 13px;
+        }
+
+        .ok {
+            color: #6fcf6f;
+        }
+
+        .err {
+            color: #cf6f6f;
+        }
+
+        .info {
+            color: #7ec8e3;
+        }
+
+        .hex {
+            color: #e0c060;
+        }
+
+        .section {
+            margin-top: 20px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>MC-101 SysEx Tester</h2>
+
+    <label>MIDI Output Device:
+        <select id="device"></select>
+    </label>
+
+    <div class="section">
+        <strong>RQ1 – Query Parameters</strong>
+        <br>
+        <button id="btn-query-system">Query System Common</button>
+        <button id="btn-query-track2">Query Tone Track 2 Common</button>
+        <button id="btn-query-partial1">Query Track 2 Partial 1</button>
+    </div>
+
+    <div class="section">
+        <strong>DT1 – Set Parameters (Track 2, Partial 1)</strong>
+        <br>
+        <label>Pan (0=left, 64=center, 127=right):
+            <input type="number" id="pan-value" min="0" max="127" value="64">
+        </label>
+        <button id="btn-set-pan">Set Pan</button>
+        <button id="btn-pan-right">Pan Hard Right (0x7F)</button>
+        <button id="btn-pan-center">Pan Center (0x40)</button>
+    </div>
+
+    <div class="section">
+        <button id="btn-clear-log">Clear Log</button>
+    </div>
+
+    <div id="log"><span class="info">Ready. Select a MIDI device and use the buttons above.</span></div>
+
+    <script>
+        let midi = null;
+        let output = null;
+        let input = null;
+
+        const log = document.getElementById('log');
+
+        function printLog(msg, cls = '') {
+            const span = document.createElement('span');
+            if (cls) span.className = cls;
+            span.textContent = msg + '\n';
+            log.appendChild(span);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // ─── MIDI Setup ─────────────────────────────────────────────────────
+
+        navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, () => {
+            printLog('✗ MIDI access denied or not supported.', 'err');
+        });
+
+        function onMIDISuccess(midiAccess) {
+            midi = midiAccess;
+            populateOutputs();
+
+            // Listen for device changes
+            midi.onstatechange = () => populateOutputs();
+
+            // Set up input (first matching port) for RQ1 responses
+            midi.inputs.forEach(port => {
+                if (!input) {
+                    input = port;
+                    input.onmidimessage = onMidiMessage;
+                    printLog(`✓ Listening for SysEx responses on: ${port.name}`, 'ok');
+                }
+            });
+        }
+
+        function populateOutputs() {
+            const select = document.getElementById('device');
+            select.innerHTML = '';
+            midi.outputs.forEach(port => {
+                const opt = document.createElement('option');
+                opt.value = port.id;
+                opt.text = port.name;
+                select.appendChild(opt);
+            });
+            if (select.options.length > 0) {
+                select.selectedIndex = 0;
+                output = midi.outputs.get(select.value);
+                printLog(`✓ Output ready: ${output.name}`, 'ok');
+            } else {
+                printLog('✗ No MIDI outputs found.', 'err');
+            }
+            select.onchange = () => {
+                output = midi.outputs.get(select.value);
+                printLog(`→ Switched output to: ${output.name}`, 'info');
+            };
+        }
+
+        function onMidiMessage(event) {
+            const bytes = Array.from(event.data);
+            // Filter Active Sensing (0xFE)
+            const filtered = bytes.filter(b => b !== 0xFE);
+            if (filtered.length === 0) return;
+            const hex = filtered.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+            printLog(`← RX: ${hex}`, 'hex');
+        }
+
+        // ─── Send Helper ─────────────────────────────────────────────────────
+
+        function sendHexStr(hexStr, label) {
+            if (!output) { printLog('✗ No output selected.', 'err'); return; }
+            const bytes = hexStr.trim().split(/\s+/).map(x => parseInt(x, 16));
+            printLog(`→ TX [${label}]: ${hexStr}`, 'info');
+            output.send(bytes);
+        }
+
+        // ─── RQ1 Buttons ─────────────────────────────────────────────────────
+
+        document.getElementById('btn-query-system').onclick = () => {
+            sendHexStr(MC101SysEx.makeRQ1('00 00 00 00', 0x10), 'RQ1 System Common');
+        };
+
+        document.getElementById('btn-query-track2').onclick = () => {
+            sendHexStr(MC101SysEx.makeRQ1('32 11 00 00', 0x10), 'RQ1 Tone Track2 Common');
+        };
+
+        document.getElementById('btn-query-partial1').onclick = () => {
+            sendHexStr(MC101SysEx.makeRQ1('32 11 20 00', 0x10), 'RQ1 Track2 Partial1');
+        };
+
+        // ─── DT1 Buttons ─────────────────────────────────────────────────────
+
+        document.getElementById('btn-set-pan').onclick = () => {
+            const val = parseInt(document.getElementById('pan-value').value, 10) & 0x7F;
+            sendHexStr(MC101SysEx.makeDT1('32 11 20 07', val), `DT1 Pan=${val}`);
+        };
+
+        document.getElementById('btn-pan-right').onclick = () => {
+            sendHexStr(MC101SysEx.makeDT1('32 11 20 07', 0x7F), 'DT1 Pan Hard Right');
+        };
+
+        document.getElementById('btn-pan-center').onclick = () => {
+            sendHexStr(MC101SysEx.makeDT1('32 11 20 07', 0x40), 'DT1 Pan Center');
+        };
+
+        document.getElementById('btn-clear-log').onclick = () => {
+            log.innerHTML = '';
+        };
+    </script>
+
+</body>
+
+</html>
